@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "881721831294",
+    "project_id": "saturday-a10d6",
+    "storage_bucket": "saturday-a10d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881721831294:android:5ee8124aff84ff757f4d2f",
+        "android_client_info": {
+          "package_name": "com.example.saturday"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpxKQ_oDADxidM-iUajYIBY5xBZrOmXVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
