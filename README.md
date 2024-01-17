@@ -2,7 +2,7 @@
 
 ## Exciting Update! Introducing Saturday, Your Cutting-Edge AI Assistant with New Features! 🤖🎨
 
-Hello LinkedIn community! 👋 I'm thrilled to share the latest enhancements to "Saturday," my cutting-edge Flutter application powered by ChatGPT 3.5 and DALL-E! 🚀
+Hello Github community! 👋 I'm thrilled to share the latest enhancements to "Saturday," my cutting-edge Flutter application powered by ChatGPT 3.5 and DALL-E! 🚀
 
 ## 🌐 Features:
 
