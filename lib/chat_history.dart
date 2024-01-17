@@ -234,6 +234,7 @@ class _ChatHistoryWidgetState extends State<ChatHistoryWidget> {
           // Handle user's choice
           if (deleteConfirmed == true) {
             deleteChatHistory();
+            Get.back();
           }
         },
         child: Icon(Icons.delete),

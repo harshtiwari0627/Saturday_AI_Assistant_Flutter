@@ -64,28 +64,52 @@ class HomeController extends GetxController {
     await flutterTts.speak(content);
   }
 
+
   Future<void> _downloadImage() async {
     var status = await Permission.storage.request();
     print(status);
     if (status == PermissionStatus.granted) {
       if (generatedImageUrl.value.isNotEmpty) {
-        final response = await http.get(Uri.parse(generatedImageUrl.value));
-        final bytes = response.bodyBytes;
-
-        final downloadsDirectory = await getDownloadsDirectory();
-        print(downloadsDirectory);
-
-        final file = File(
-          '${downloadsDirectory!.path}/images/final.png',
+        Get.dialog(
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+          barrierDismissible: false,
         );
 
-        await file.writeAsBytes(bytes);
+        try {
+          final response = await http.get(Uri.parse(generatedImageUrl.value));
+          final bytes = response.bodyBytes;
 
-        Get.snackbar(
-          'Download Complete',
-          'Image downloaded and saved in Downloads',
-          duration: Duration(seconds: 2),
-        );
+          final downloadsDirectory = await getExternalStorageDirectory();
+          print(downloadsDirectory);
+
+          // Ensure directory exists
+          final imagesDirectory = Directory('${downloadsDirectory!.path}/images');
+          if (!await imagesDirectory.exists()) {
+            await imagesDirectory.create(recursive: true);
+          }
+
+          // Create the file
+          final file = File('${imagesDirectory.path}/final.png');
+          await file.writeAsBytes(bytes);
+
+          Get.back(); // Close the progress indicator
+
+          Get.snackbar(
+            'Download Complete',
+            'Image downloaded and saved in Downloads',
+            duration: Duration(seconds: 2),
+          );
+        } catch (e) {
+          Get.back(); // Close the progress indicator on error
+
+          Get.snackbar(
+            'Download Failed',
+            'Failed to download image',
+            duration: Duration(seconds: 2),
+          );
+        }
       }
     } else {
       Get.snackbar(
@@ -118,6 +142,12 @@ class HomeController extends GetxController {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
+                Get.back();
+                Get.snackbar(
+                  'Saturday is working on your prompt',
+                  'Wait for a while',
+                  duration: Duration(seconds: 9),
+                );
                 if (num == 0) {
                   generatedImageUrl.value = '';
                   generatedContent.value = await openAIService.chatGPTAPI(prompt.text);
@@ -140,7 +170,6 @@ class HomeController extends GetxController {
                   await systemSpeak(generatedContent.value);
                 }
                 print(generatedImageUrl.value);
-                Get.back();
               },
               child: Text('Send'),
             ),
@@ -197,11 +226,13 @@ class HomeController extends GetxController {
 
     // Submit feedback to Firestore
     FeedbackService().submitFeedback(feedbackModel);
+
     Get.snackbar(
       'Feedback Submitted',
       feedback,
       duration: Duration(seconds: 2),
     );
+    Get.offAll(()=>HomePage());
   }
 
   void refreshPage() {
@@ -452,7 +483,9 @@ class HomePage extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.network(controller.generatedImageUrl.value),
+                          child: controller.generatedImageUrl.isNotEmpty
+                              ? Image.network(controller.generatedImageUrl.value)
+                              : CircularProgressIndicator(),
                         ),
                         SizedBox(
                           height: 40,
