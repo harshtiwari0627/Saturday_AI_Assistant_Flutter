@@ -13,8 +13,8 @@ import 'package:saturday/main.dart';
 import 'package:saturday/openai_service.dart';
 import 'package:saturday/pallette.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -630,38 +630,6 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () async {
-                        if (await controller.speechToText.hasPermission &&
-                            controller.speechToText.isNotListening &&
-                            controller.flag == 0) {
-                          await controller.startListening();
-                          controller.flag = 1;
-                        } else if (controller.speechToText.isNotListening &&
-                            controller.flag == 1) {
-                          final speech = await controller.openAIService
-                              .isArtPromptAPI(controller.lastWords);
-                          if (speech.contains('https')) {
-                            controller.generatedImageUrl.value = speech;
-                            controller.generatedContent.value = '';
-                          } else {
-                            controller.generatedImageUrl.value = '';
-                            controller.generatedContent.value = speech;
-                            await controller.systemSpeak(speech);
-                          }
-                          await controller.stopListening();
-                          controller.flag = 0;
-                        } else {
-                          controller.initSpeechToText();
-                        }
-                      },
-                      child: FeatureBox(
-                        color: Pallete.thirdSuggestionBoxColor,
-                        headerText: 'Smart Voice Assistant',
-                        descriptionText:
-                        'Get the best of both worlds with a voice assistant powered by Dall-E and ChatGPT',
-                      ),
-                    ),
-                    GestureDetector(
                       onTap: () {
                         controller._showPromptModal(2);
                       },
@@ -693,3 +661,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
